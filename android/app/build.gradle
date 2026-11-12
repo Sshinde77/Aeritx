@@ -1,0 +1,99 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+def releaseKeystoreFilePath = keystoreProperties['storeFile']
+def releaseKeystoreFile = releaseKeystoreFilePath ? file(releaseKeystoreFilePath) : null
+def useReleaseSigning = keystorePropertiesFile.exists() && releaseKeystoreFile != null && releaseKeystoreFile.exists()
+def releaseTaskRequested = gradle.startParameter.taskNames.any { taskName ->
+    taskName.toLowerCase().contains('release')
+}
+
+// The certificates downloaded from Play Console (including hybrid classical
+// and PQC certificates) are public app-signing certificates. Google Play owns
+// their private keys and uses them after an AAB is uploaded. Local release
+// bundles must continue to be signed with the private upload key in this JKS.
+if (releaseTaskRequested && !useReleaseSigning) {
+    throw new GradleException(
+        'Release signing is not configured. Ensure android/key.properties '
+        + 'points to an existing upload keystore.'
+    )
+}
+
+android {
+    namespace "com.aeritx.app"
+    compileSdk 36
+    // Rive 0.13.x must be rebuilt with NDK 28 for 16 KB page-size support.
+    // Keep this in sync with rive.ndk.version in gradle.properties.
+    ndkVersion "28.2.13676358"
+
+    defaultConfig {
+        applicationId "com.aeritx.app"
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 36
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            shrinkResources false
+            minifyEnabled false
+            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+    implementation 'androidx.window:window:1.0.0'
+    implementation 'androidx.window:window-java:1.0.0'
+}

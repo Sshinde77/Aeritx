@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.aeritx.app",
+      "sha256_cert_fingerprints": [
+        "4B:A6:9F:5B:5A:2C:A8:1D:DE:59:28:E0:33:4E:18:57:3D:B8:D2:6C:DB:80:0A:70:BE:86:9D:FA:93:F6:52:80"
+      ]
+    }
+  }
+]

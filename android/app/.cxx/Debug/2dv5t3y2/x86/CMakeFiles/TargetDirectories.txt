@@ -1,0 +1,2 @@
+/Users/nikhil/Downloads/cartuser (1)/CartUser-User-AppFiles/cartuser-source-v1.9.0/android/app/.cxx/Debug/2dv5t3y2/x86/CMakeFiles/rebuild_cache.dir
+/Users/nikhil/Downloads/cartuser (1)/CartUser-User-AppFiles/cartuser-source-v1.9.0/android/app/.cxx/Debug/2dv5t3y2/x86/CMakeFiles/edit_cache.dir

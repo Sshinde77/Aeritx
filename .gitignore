@@ -4,6 +4,30 @@
 .flutter-plugins-dependencies
 .packages
 build/
+coverage/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+android/key.properties
+**/*.jks
+**/*.keystore
+**/*.pem
+**/*.p12
+**/*.der
+
+# Release and diagnostic artifacts
+*.log
+*.ipa
+*.apk
+*.aab
+/*.zip
+/AeritxWebsitechanges.docx
+/screenshot_home.png
+/window_dump.xml
+KEYSTORE_CREDENTIALS_SECURE.txt
+.DS_Store
 
 # Android generated files
 android/.gradle/
@@ -13,8 +37,4 @@ android/local.properties
 .idea/
 .vscode/
 
-# Logs
-*.log
-
-# Dart
-pubspec.lock
+# Dart/Flutter applications should commit the resolved dependency graph.

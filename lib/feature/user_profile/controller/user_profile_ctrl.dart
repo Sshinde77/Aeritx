@@ -22,8 +22,15 @@ class UserProfileCtrl extends AutoDisposeNotifier<UserModel> {
   UserProfileRepo get _repo => ref.read(userProfileRepoProvider);
 
   void setUser(UserModel user) => state = user.copyWith(
+        // The edit form only contains editable fields. Keep the account
+        // metadata from the loaded profile when replacing the form model.
+        id: state.id,
+        uid: state.uid,
         image: state.image,
         imageFile: () => state.imageFile,
+        billingAddress: state.billingAddress,
+        balance: state.balance,
+        point: state.point,
         country: () => state.country,
       );
   void setCountry(Country? country) => state = state.copyWith(

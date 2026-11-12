@@ -14,6 +14,7 @@ class PaymentRepo {
     String callBack, {
     String method = 'POST',
     bool isDeposit = false,
+    String? transactionId,
   }) async {
     try {
       final dio = Dio()..interceptors.add(talk.dioLogger);
@@ -37,6 +38,7 @@ class PaymentRepo {
         context,
         query: {
           'status': res['status'] ? 's' : 'f',
+          if (transactionId != null) 'id': transactionId,
           'dep': isDeposit.toString(),
         },
       );

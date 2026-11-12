@@ -36,7 +36,10 @@ class UserProfileRepo {
         (json) => PostMessage.fromMap(json),
       );
 
-      _ref.watch(userDashCtrlProvider.notifier).reload();
+      // Wait for the refreshed profile before the edit provider is
+      // invalidated, otherwise the screen can immediately rebuild with the
+      // old cached user data.
+      await _ref.read(userDashCtrlProvider.notifier).reload();
 
       return right(res);
     } on DioException catch (e) {

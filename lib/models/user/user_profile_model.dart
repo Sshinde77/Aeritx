@@ -154,6 +154,7 @@ class UserModel extends Equatable {
 
     result.addAll({'name': name});
     result.addAll({'username': username});
+    result.addAll({'email': email});
     result.addAll({'phone': phone});
     result.addAll({...address.toMap()});
     result.addAll({'country_id': country?.id});

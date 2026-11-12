@@ -202,13 +202,19 @@ class ProductDetailsView extends HookConsumerWidget {
                                       ),
                                       onPressed: (l) async {
                                         l.value = true;
-                                        await ref
-                                            .read(cartCtrlProvider.notifier)
-                                            .addToCart(
-                                              product: product,
-                                              attribute: variantString(),
-                                              cUid: campaignId,
-                                            );
+                                        // A cart item opens this page with
+                                        // `t=cart`. It is already in the cart,
+                                        // so adding it again would increment
+                                        // its quantity before checkout.
+                                        if (type != 'cart') {
+                                          await ref
+                                              .read(cartCtrlProvider.notifier)
+                                              .addToCart(
+                                                product: product,
+                                                attribute: variantString(),
+                                                cUid: campaignId,
+                                              );
+                                        }
                                         l.value = false;
                                         if (context.mounted) {
                                           RouteNames.shippingDetails

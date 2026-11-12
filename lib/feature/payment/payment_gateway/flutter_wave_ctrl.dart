@@ -102,6 +102,7 @@ class FlutterWaveCtrlNotifier extends FamilyNotifier<String, PaymentState> {
         '${_log.method.callbackUrl}/${data['tx_ref']}/${data['status']}';
 
     await PaymentRepo()
-        .confirmPayment(context, data, callBack, isDeposit: arg.isDeposit);
+        .confirmPayment(context, data, callBack,
+            isDeposit: arg.isDeposit, transactionId: _log.trx);
   }
 }

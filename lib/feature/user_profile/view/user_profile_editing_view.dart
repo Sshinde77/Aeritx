@@ -354,9 +354,10 @@ class UserProfileEditingView extends HookConsumerWidget {
           isLoading: isLoading.value,
           onPressed: () async {
             final isValid = formKey.currentState?.saveAndValidate();
-            if (isValid == false) return;
+            if (isValid != true) return;
             final data = formKey.currentState?.value;
-            final profile = UserModel.fromFlatMap(data!);
+            if (data == null) return;
+            final profile = UserModel.fromFlatMap(data);
 
             userCtrl().setUser(profile);
 

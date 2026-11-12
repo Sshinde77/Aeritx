@@ -140,7 +140,8 @@ class RazorPayPaymentCtrl {
     Toaster.showLoading('Confirming Payment...');
 
     await PaymentRepo()
-        .confirmPayment(context, data, callBack, isDeposit: payLog.isDeposit);
+        .confirmPayment(context, data, callBack,
+            isDeposit: payLog.isDeposit, transactionId: _log.trx);
     Toaster.remove();
   }
 

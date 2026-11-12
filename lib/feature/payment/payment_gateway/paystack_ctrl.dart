@@ -62,7 +62,8 @@ class PaystackCtrlNotifier extends FamilyNotifier<String?, PaymentState> {
     final body = url!.queryParameters;
     final trx = _log.trx;
     final callbackUrl = '${_log.method.callbackUrl}/$trx';
-    await PaymentRepo().confirmPayment(context, body, callbackUrl);
+    await PaymentRepo().confirmPayment(context, body, callbackUrl,
+        transactionId: _log.trx);
   }
 
   String get _callbackUrl => Endpoints.baseUrl.replaceAll('/api', '');

@@ -64,7 +64,8 @@ class StripePaymentCtrlNotifier extends FamilyNotifier<String, PaymentState> {
     Logger.json(body);
 
     await PaymentRepo()
-        .confirmPayment(context, body, callbackUrl, isDeposit: arg.isDeposit);
+        .confirmPayment(context, body, callbackUrl,
+            isDeposit: arg.isDeposit, transactionId: _log.trx);
   }
 
   PaymentLog get _log => arg.log;

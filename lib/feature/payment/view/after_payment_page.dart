@@ -5,6 +5,7 @@ import 'package:e_com/main.export.dart';
 import 'package:e_com/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:async';
 
 class AfterPaymentView extends HookConsumerWidget {
   const AfterPaymentView({super.key});
@@ -20,29 +21,49 @@ class AfterPaymentView extends HookConsumerWidget {
     final isLoading = useState(false);
     final tr = context.tr;
 
-    useEffect(
-      () {
-        Future(() {
-          if (ref.read(authCtrlProvider)) {
-            ref.read(userDashCtrlProvider.notifier).reload();
-          }
-        });
-        return null;
-      },
-      [statusQu],
-    );
-
-    checkOrderStatus() async {
-      if (trxNo == null) return;
+    Future<void> checkOrderStatus() async {
+      if (trxNo == null || isLoading.value) return;
       isLoading.value = true;
 
       final payStatus =
           await ref.read(orderPaymentLogProvider.notifier).statusCheck(trxNo);
 
+      if (!context.mounted) return;
       isLoading.value = false;
       status.value = payStatus;
       HapticFeedback.lightImpact();
     }
+
+    useEffect(
+      () {
+        Timer? timer;
+        var stopped = false;
+
+        Future(() {
+          if (ref.read(authCtrlProvider)) {
+            ref.read(userDashCtrlProvider.notifier).reload();
+          }
+        });
+
+        // Payment gateways can update the payment log asynchronously. Poll
+        // while the transaction is pending so a successful payment does not
+        // remain stuck on the initial `w` status.
+        if (trxNo != null && (statusQu == 'w' || statusQu == '1')) {
+          checkOrderStatus();
+          timer = Timer.periodic(const Duration(seconds: 3), (_) {
+            if (!stopped && (status.value == 'w' || status.value == '1')) {
+              checkOrderStatus();
+            }
+          });
+        }
+
+        return () {
+          stopped = true;
+          timer?.cancel();
+        };
+      },
+      [trxNo, statusQu],
+    );
 
     useOnAppLifecycleStateChange(
       (_, c) {

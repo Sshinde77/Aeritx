@@ -61,7 +61,8 @@ class AmarPayCtrlNotifier extends FamilyNotifier<String, PaymentState> {
     final callbackUrl = '${_log.method.callbackUrl}/$trx/$type';
 
     await PaymentRepo()
-        .confirmPayment(context, body, callbackUrl, isDeposit: arg.isDeposit);
+        .confirmPayment(context, body, callbackUrl,
+            isDeposit: arg.isDeposit, transactionId: _log.trx);
   }
 
   PaymentLog get _log => arg.log;

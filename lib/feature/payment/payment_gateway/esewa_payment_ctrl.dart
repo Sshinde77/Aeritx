@@ -85,6 +85,7 @@ class ESewaPaymentCtrlNotifier extends FamilyNotifier<String, PaymentState> {
       {'data': encodedData},
       callback,
       isDeposit: arg.isDeposit,
+      transactionId: _log.trx,
     );
   }
 

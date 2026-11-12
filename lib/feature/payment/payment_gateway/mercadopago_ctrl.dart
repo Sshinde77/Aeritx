@@ -49,7 +49,8 @@ class MercadopagoPaymentCtrl extends FamilyNotifier<QMap, PaymentState> {
     final callBack = '${_log.method.callbackUrl}/${_log.trx}';
 
     await PaymentRepo()
-        .confirmPayment(context, body, callBack, isDeposit: arg.isDeposit);
+        .confirmPayment(context, body, callBack,
+            isDeposit: arg.isDeposit, transactionId: _log.trx);
   }
 
   String get _callbackUrl => Endpoints.baseUrl.replaceAll('/api', '');
